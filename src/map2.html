@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=UCVb3rkl12kd2UGTu7gSvqlp"></script>
+    <style>
+        #map {
+            position: absolute;
+            top:0;
+            right:0;
+            left: 0;
+            bottom: 0;
+            background: #000;
+        }
+        .anchorBL {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+  var pointData = [
+    {
+      "name": "上海市第二康复医院",
+      "value": [121.4811944, 31.34563889]
+    },
+    {
+      "name": "市一宝山分院",
+      "value": [121.4913722, 31.37926389]
+    },
+    {
+      "name": "宝山区友谊街道社区卫生服务中心",
+      "value": [121.4911139,31.40340278]
+    },
+    {
+      "name": "上海市宝山区精神卫生中心",
+      "value": [121.4813639,31.41145278]
+    },
+    {
+      "name": "宝山区淞南镇社区卫生服务中心",
+      "value": [121.48865618,31.34204967]
+    }
+  ]
+  var removePush = []
+  var map = new BMap.Map('map')
+  map.centerAndZoom(new BMap.Point(121.48865618, 31.34204967), 12);
+
+
+  pointData.forEach(function (val, i) {
+    var marker = new BMap.Marker(new BMap.Point(val.value[0], val.value[1]));
+    map.addOverlay(marker);
+    if (i < 3) {
+      removePush.push(marker)
+    }
+  })
+
+    setTimeout(function () {
+      removePush.forEach(function (val) {
+        map.removeOverlay(val)
+      })
+    }, 3 * 1000)
+
+</script>
+</body>
+</html>
