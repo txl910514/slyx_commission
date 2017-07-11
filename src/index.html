@@ -1,338 +1,206 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="renderer" content="webkit">
-  <title></title>
-  <link rel="stylesheet" href="css/main.css">
-  <script type="text/javascript" src="jslib/jquery.min.js"></script>
-  <script type="text/javascript" src="jslib/underscore.js"></script>
-  <script type="text/javascript" src="jslib/echarts.js"></script>
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-  <script src="jslib/html5shiv.js"></script>
-  <script src="jslib/respond.js"></script>
-  <![endif]-->
-  <script type="text/javascript">
-    GVR = {
-      URL: {},
-      ECHARTS: {},
-      JSON: {}
-    };
-  </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="jslib/jquery.min.js"></script>
+    <script type="text/javascript" src="jslib/echarts.js"></script>
+    <script>
+//      var devicePixelRatio = window.devicePixelRatio;
+//      var scale = 1/ devicePixelRatio
+//      var metaEl = document.createElement('meta')
+//      var head = document.querySelector('head')
+//      var title = head.querySelector('title')
+//      var u = window.navigator.userAgent;
+//      if (u.indexOf('Mac') > -1 && devicePixelRatio !== 1) {
+//        devicePixelRatio = devicePixelRatio / 2
+//      }
+//      document.documentElement.setAttribute('data-dpr', devicePixelRatio);
+//      metaEl.setAttribute('name', 'viewport'); metaEl.setAttribute('content', 'width=device-width, user-scalable=no,initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no');
+//      head.insertBefore(metaEl, title)
+    </script>
+    <style>
+        #map {
+            position: absolute;
+            top:0;
+            right:0;
+            left: 0;
+            bottom: 0;
+            background: #000;
+        }
+        .anchorBL {
+            display: none;
+        }
+
+    </style>
 </head>
 <body>
-  <div class="content position-absolute">
-    <div class="header">
-      <div class="slyx-log">
-        <img src="images/slxy_logo.png" alt="">
-      </div>
-      <div class="header-title">全国进度总览</div>
-      <div class="time-box">
-        <div class="time-square">
-          <div class="hour-text" id="js-hour-text">
+<div id="map">
 
-          </div>
-          <div class="time-border-top-left"></div>
-          <div class="time-border-left-top"></div>
-          <div class="time-border-top-right"></div>
-          <div class="time-border-right-top"></div>
-          <div class="time-border-left-bottom"></div>
-          <div class="time-border-bottom-left"></div>
-          <div class="time-border-right-bottom"></div>
-          <div class="time-border-bottom-right"></div>
-        </div>
-        <div class="time-colon">：</div>
-        <div class="time-square">
-          <div class="hour-text" id="js-min-text">
-
-          </div>
-          <div class="time-border-top-left"></div>
-          <div class="time-border-left-top"></div>
-          <div class="time-border-top-right"></div>
-          <div class="time-border-right-top"></div>
-          <div class="time-border-left-bottom"></div>
-          <div class="time-border-bottom-left"></div>
-          <div class="time-border-right-bottom"></div>
-          <div class="time-border-bottom-right"></div>
-        </div>
-        <div class="time-square time-long-square">
-          <div class="hour-text" id="js-year-text">
-
-          </div>
-          <div class="time-border-top-left"></div>
-          <div class="time-border-left-top"></div>
-          <div class="time-border-top-right"></div>
-          <div class="time-border-right-top"></div>
-          <div class="time-border-left-bottom"></div>
-          <div class="time-border-bottom-left"></div>
-          <div class="time-border-right-bottom"></div>
-          <div class="time-border-bottom-right"></div>
-        </div>
-      </div>
-    </div>
-    <div class="body-content position-absolute">
-      <div class="map-content position-absolute">
-        <div class="progress-visit">
-          <div class="progress-title">
-            <span class="display-middle">总拜访数</span>
-            <span class="display-middle">/</span>
-            <span class="display-middle total-hospital-num">全国医院总数</span>
-          </div>
-          <div class="progress-content">
-            <div class="progress-con" style="width: 60%;"></div>
-            <div class="position-absolute progress-num">5000/10000</div>
-          </div>
-        </div>
-        <div class="map-select">
-          <div class="map-select-title ">
-            <span class="display-middle map-select-text">全国</span>
-            <span class="map-select-arrow arrow"></span>
-          </div>
-          <div class="map-select-content display-none">
-
-          </div>
-        </div>
-        <div class="position-absolute" id="area-total-map">
-
-        </div>
-      </div>
-      <div class="right-content position-absolute">
-        <div class="meter-box position-absolute">
-          <div class="meter-img position-absolute" >
-            <div class="palaver-img img-rotate rotate-img-1 active" id="palaver"></div>
-            <div class="purpose-img img-rotate rotate-img-2" id="purpose"></div>
-            <div class="arrange-img img-rotate rotate-img-3" id="arrange"></div>
-            <div class="train-img img-rotate rotate-img-4" id="train"></div>
-            <div class="use-img img-rotate rotate-img-5" id="use"></div>
-            <div class="meter-arrow meter-arrow-1"></div>
-            <div class="half-rect-1 half-react">
-              <div class="half-rect-2 half-react">
-                <div class="half-rect-3 half-react meter-num-1" id="meter-num">
-                  154
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="apart-long-top-left"></div>
-          <div class="apart-long-left-top"></div>
-          <div class="apart-long-left-bottom"></div>
-          <div class="apart-long-bottom-left"></div>
-          <div class="apart-long-right-bottom"></div>
-          <div class="apart-long-bottom-right"></div>
-        </div>
-        <div class="manage-box position-absolute">
-          <div class="manage-content">
-            <div class="manage-line border-none radius-none-bottom-right radius-none-bottom-left">
-              <div class="manage-line-radius" id="manage-money-radius">
-
-              </div>
-              <div class="manage-arrow arrow"></div>
-              <div class="border-gradient-top"></div>
-              <div class="border-gradient-left"></div>
-              <div class="border-gradient-bottom"></div>
-              <div class="alert-top-left"></div>
-            </div>
-            <div class="manage-line border-none  radius-none">
-              <div class="manage-line-radius">
-                <div class="display-height"></div>
-                <div class="icon-box">
-                  <img src="images/amount_icon.png" alt="">
-                  <div class="display-height"></div>
-                </div>
-                <div class="manage-con">
-                  <div class="manage-title">管理资产数量</div>
-                  <div class="manage-con-text">
-                    <div class="manage-text display-middle">
-                      <div class="num-style num-1"></div>
-                      <div class="num-style num-2"></div>
-                      <div class="num-style num-3"></div>
-                      <div class="num-style num-4"></div>
-                      <div class="num-style num-5"></div>
-                      <div class="num-style num-6"></div>
-                      <div class="num-style num-7"></div>
-                      <div class="num-style num-split"></div>
-                      <div class="num-style num-8"></div>
-                      <div class="num-style num-9"></div>
-                      <div class="num-style num-0"></div>
-                    </div>
-                    <div class="display-middle manage-unit">台</div>
-                  </div>
-                </div>
-              </div>
-              <div class="manage-arrow arrow"></div>
-              <div class="border-gradient-top"></div>
-              <div class="border-gradient-left"></div>
-              <div class="border-gradient-bottom"></div>
-              <div class="alert-top-left"></div>
-            </div>
-            <div class="manage-line radius-none-top-right radius-none-top-left">
-              <div class="manage-line-radius">
-                <div class="display-height"></div>
-                <div class="icon-box">
-                  <img src="images/frequency_icon.png" alt="">
-                  <div class="display-height"></div>
-                </div>
-                <div class="manage-con">
-                  <div class="manage-title">管理使用次数</div>
-                  <div class="manage-con-text">
-                    <div class="manage-con-text">
-                      <div class="manage-text display-middle" id="js-manage-frequency">
-                        <div class="num-style num-1"></div>
-                        <div class="num-style num-2"></div>
-                        <div class="num-style num-3"></div>
-                        <div class="num-style num-4"></div>
-                        <div class="num-style num-5"></div>
-                        <div class="num-style num-6"></div>
-                        <div class="num-style num-7"></div>
-                        <div class="num-style num-split"></div>
-                        <div class="num-style num-8"></div>
-                        <div class="num-style num-9"></div>
-                        <div class="num-style num-0"></div>
-                      </div>
-                      <div class="display-middle manage-unit">次</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="manage-arrow arrow"></div>
-              <div class="border-gradient-top"></div>
-              <div class="border-gradient-left"></div>
-              <div class="border-gradient-bottom"></div>
-              <div class="alert-top-left"></div>
-            </div>
-          </div>
-          <div class="manage-long-left-bottom"></div>
-          <div class="manage-long-bottom-left"></div>
-        </div>
-      </div>
-      <div class="apart-top-left"></div>
-      <div class="apart-left-top"></div>
-      <div class="apart-top-right"></div>
-      <div class="apart-right-top"></div>
-      <div class="apart-left-bottom"></div>
-      <div class="apart-bottom-left"></div>
-      <div class="apart-right-bottom"></div>
-      <div class="apart-bottom-right"></div>
-    </div>
-  </div>
-  <script type="text/html" id="single_num_tpl">
-    <div class="num-style num-<%- index %>"></div>
-  </script>
-  <script type="text/html" id="all_china_tpl">
-    <div class="map-select-line">
-      <span class="select-con-label display-middle">默认：</span>
-      <span class="select-con-text display-middle active" id="china">全国</span>
-    </div>
-  </script>
-  <script type="text/html" id="select_line_tpl">
-    <div class="map-select-line">
-      <span class="select-con-label select-con-text display-middle" id="<%- area_key %>"><%- provinces[0] %>：</span>
-      <% _.each(provinces, function(province, key){ %>
-        <% if(key !== 0){ %>
-          <span class="select-con-text display-middle" id="<%- area_key  %>_<%-  key %>"><%- province %></span>
-        <% } %>
-      <% }) %>
-    </div>
-  </script>
-  <script type="text/html" id="manage_money_tpl">
-    <div class="display-height"></div>
-    <div class="icon-box">
-      <img src="images/money_icon.png" alt="">
-      <div class="display-height"></div>
-    </div>
-    <div class="manage-con">
-      <div class="manage-title">管理资产总价</div>
-      <div class="manage-con-text">
-        <span class="money-mark"></span>
-        <div class="manage-text display-middle">
-          <div class="num-style num-1"></div>
-          <div class="num-style num-2"></div>
-          <div class="num-style num-3"></div>
-          <div class="num-style num-4"></div>
-          <div class="num-style num-5"></div>
-          <div class="num-style num-6"></div>
-          <div class="num-style num-7"></div>
-          <div class="num-style num-split"></div>
-          <div class="num-style num-8"></div>
-          <div class="num-style num-9"></div>
-          <div class="num-style num-0"></div>
-        </div>
-      </div>
-    </div>
-  </script>
-  <script type="text/html" id="manage_status_tpl">
-    <div class="display-middle status-flex">
-      <div class="status-flex-border">
-        <div class="display-height"></div>
-        <div class="manage-text display-middle">
-          <div class="num-style num-1"></div>
-          <div class="num-style num-2"></div>
-          <div class="num-style num-3"></div>
-        </div>
-        <div class="display-middle manage-unit">家</div>
-        <div class="linear-height"></div>
-      </div>
-      <div class="status-name">合同递交</div>
-    </div>
-    <div class="display-middle status-flex">
-      <div class="status-flex-border">
-        <div class="display-height"></div>
-        <div class="manage-text display-middle">
-          <div class="num-style num-1"></div>
-          <div class="num-style num-2"></div>
-          <div class="num-style num-3"></div>
-        </div>
-        <div class="display-middle manage-unit">家</div>
-        <div class="linear-height"></div>
-      </div>
-      <div class="status-name">试用签约</div>
-    </div>
-    <div class="display-middle status-flex">
-      <div class="status-flex-border ">
-        <div class="display-height"></div>
-        <div class="manage-text display-middle">
-          <div class="num-style num-1"></div>
-          <div class="num-style num-2"></div>
-          <div class="num-style num-3"></div>
-        </div>
-        <div class="display-middle manage-unit">家</div>
-        <div class="linear-height"></div>
-      </div>
-      <div class="status-name">正式签约</div>
-    </div>
-    <div class="display-middle status-flex">
-      <div class="status-flex-border no-border">
-        <div class="display-height"></div>
-        <div class="manage-text display-middle">
-          <div class="num-style num-1"></div>
-          <div class="num-style num-2"></div>
-          <div class="num-style num-3"></div>
-        </div>
-        <div class="display-middle manage-unit">家</div>
-      </div>
-      <div class="status-name">正在使用</div>
-    </div>
-  </script>
-  <script type="text/html" id="alert_map_tpl">
-    <div class="hospital-alert">
-      <div class="hospital-alert-content">
-        <div class="hospital-title">上海市XXX医院</div>
-        <div class="hospital-text">详细进度：确定意向</div>
-        <div class="hospital-text">等级：三甲</div>
-        <div class="hospital-text">MEMS：张维</div>
-        <div class="hospital-text">确定意向时间：2016/12/03</div>
-      </div>
-      <div class="alert-top-left alert-radius-border"></div>
-      <div class="alert-top-right alert-radius-border"></div>
-      <div class="alert-bottom-left alert-radius-border"></div>
-      <div class="alert-bottom-right alert-radius-border"></div>
-    </div>
-  </script>
+</div>
+<script type="text/javascript">
+  var pointData = [
+    {
+      "name": "上海市第二康复医院",
+      "value": [121.4811944, 31.34563889]
+    },
+    {
+      "name": "市一宝山分院",
+      "value": [121.4913722, 31.37926389]
+    },
+    {
+      "name": "上海市宝山区罗店医院",
+      "value": [121.3438833, 31.4143]
+    },
+    {
+      "name": "宝山区友谊街道社区卫生服务中心",
+      "value": [121.4911139,31.40340278]
+    },
+    {
+      "name": "上海市宝山区精神卫生中心",
+      "value": [121.4813639,31.41145278]
+    },
+    {
+      "name": "宝山区淞南镇社区卫生服务中心",
+      "value": [121.48865618,31.34204967]
+    },
+    {
+      "name": "月浦镇社区卫生服务中心",
+      "value": [121.4312276,31.41647202]
+    },
+    {
+      "name": "月浦镇盛桥社区卫生服务中心",
+      "value": [121.4038396,31.45208572]
+    },
+    {
+      "name": "杨行镇社区卫生服务中心",
+      "value": [121.4444194,31.37131629]
+    },
+    {
+      "name": "吴淞街道社区卫生服务中心",
+      "value": [121.4878527, 31.38312975]
+    },
+    {
+      "name": "庙行镇社区卫生服务中心",
+      "value": [121.4287758, 31.32650549]
+    },
+    {
+      "name": "泗塘社区卫生服务中心",
+      "value": [121.458224, 31.33667294]
+    },
+    {
+      "name": "张庙街道长江路社区卫生服务中心",
+      "value": [121.4447286, 31.3401958]
+    },
+    {
+      "name": "高境镇社区卫生服务中心",
+      "value": [121.4628418, 31.32381919]
+    },
+    {
+      "name": "大场镇祁连社区卫生服务中心",
+      "value": [121.3772412, 31.32285746]
+    },
+    {
+      "name": "大场镇大场社区卫生服务中心",
+      "value": [121.4172288, 31.28762572]
+    },
+    {
+      "name": "大场镇第三社区卫生服务中心",
+      "value": [121.4189524, 31.29979356]
+    },
+    {
+      "name": "顾村镇菊泉新城社区卫生服务中心",
+      "value": [121.3717538, 31.35238743]
+    },
+    {
+      "name": "顾村镇社区卫生服务中心",
+      "value": [121.4089151, 31.35288384]
+    },
+    {
+      "name": "罗店镇社区卫生服务中心",
+      "value": [121.3582939, 31.40416825]
+    },
+    {
+      "name": "罗泾镇社区卫生服务中心",
+      "value": [121.3714251, 31.46136213]
+    },
+    {
+      "name": "上海市宝山区仁和医院",
+      "value": [121.4429209, 31.33182076]
+    },
+    {
+      "name": "曙光医院宝山分院",
+      "value": [121.4864889, 31.40972133]
+    },
+    {
+      "name": "上海宝山区妇幼保健所",
+      "value": [121.49151175, 31.38374353]
+    },
+    {
+      "name": "宝山区老年护理医院",
+      "value": [121.44284289, 31.32934076]
+    },
+    {
+      "name": "上海市宝山区大场医院",
+      "value": [121.39305039, 31.30701039]
+    }
+  ]
+  var myChart = echarts.init(document.getElementById('map'));
+  const mapUrl = '/jslib/area/district/baoshan.json'
+  $.getJSON(mapUrl, function (mapData) {
+    console.log(mapData)
+    echarts.registerMap('baoshan', mapData)
+    // point.lng += data.horShift
+    // point.lat += data.verShift
+    var option = {
+      geo: {
+        map: 'baoshan',
+        label: {
+          emphasis: {
+            show: false
+          }
+        },
+        roam: true,
+        itemStyle: {
+          normal: {
+            areaColor: '#1f3043',
+            borderColor: '#106aa0'
+          },
+          emphasis: {
+            areaColor: '#2a333d'
+          }
+        },
+        zoom: 2
+      },
+      series: [{
+        name: 'marker',
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        zlevel: 2,
+        rippleEffect: {
+          brushType: 'stroke'
+        },
+        label: {
+          normal: {
+            show: true,
+            position: 'bottom',
+            formatter: '{b}'
+          }
+        },
+        symbolSize: function(val) {
+          return 15;
+        },
+        showEffectOn: 'render',
+        itemStyle: {
+          normal: {
+            color: '#2ec1ae'
+          }
+        },
+        data: pointData
+      }]
+    };
+    myChart.setOption(option)
+  })
+</script>
 </body>
-<script type="text/javascript" src="journal_js/common.js"></script>
-<script type="text/javascript" src="journal_js/echarts_js.js"></script>
-<script type="text/javascript" src="journal_js/index.js"></script>
 </html>

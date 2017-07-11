@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>map1</title>
+    <script type="text/javascript" src="jslib/echarts.js"></script>
+    <script type="text/javascript" src="jslib/bmap.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=UCVb3rkl12kd2UGTu7gSvqlp"></script>
+    <style>
+        #map {
+            position: absolute;
+            top:0;
+            right:0;
+            left: 0;
+            bottom: 0;
+            background: #000;
+        }
+        .anchorBL {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div id="map">
+
+</div>
+<script type="text/javascript">
+  var myBMapExt = new BMapExtension(document.querySelector('#map'), BMap, echarts);
+  var map = myBMapExt.getMap();
+  var startPoint = {
+    x: 104.114129,
+    y: 37.550339
+  };
+  var point = new BMap.Point(startPoint.x, startPoint.y);
+  map.centerAndZoom(point, 5);
+  map.enableScrollWheelZoom(true);
+  var container = BMapExt.getEchartsContainer();
+  var option = {
+    bmap: {
+      center: [121.4089151,31.35238743],
+      zoom:13,
+      roam: false,
+      mapStyle: {
+        styleJson: [
+          {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": {
+              "color": "#044161"
+            }
+          },
+          {
+            "featureType": "land",
+            "elementType": "all",
+            "stylers": {
+              "color": "#004981"
+            }
+          },
+          {
+            "featureType": "boundary",
+            "elementType": "geometry",
+            "stylers": {
+              "color": "#064f85"
+            }
+          },
+          {
+            "featureType": "railway",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "geometry",
+            "stylers": {
+              "color": "#004981"
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#005b96",
+              "lightness": 1
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "labels",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "arterial",
+            "elementType": "geometry",
+            "stylers": {
+              "color": "#004981"
+            }
+          },
+          {
+            "featureType": "arterial",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#00508b"
+            }
+          },
+          {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "green",
+            "elementType": "all",
+            "stylers": {
+              "color": "#056197",
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "subway",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "manmade",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "local",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "arterial",
+            "elementType": "labels",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "boundary",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#029fd4"
+            }
+          }, {
+            "featureType": "building",
+            "elementType": "all",
+            "stylers": {
+              "color": "#1a5787"
+            }
+          }, {
+            "featureType": "label",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }
+        ]
+      }
+    },
+    geo: {
+      map: 'bmap'
+    },
+    series: [{
+      name: 'marker',
+      type: 'effectScatter',
+      coordinateSystem: 'bmap',
+      zlevel: 2,
+      rippleEffect: {
+        brushType: 'stroke'
+      },
+      label: {
+        normal: {
+          show: true,
+          position: 'bottom',
+          formatter: '{b}'
+        }
+      },
+      symbolSize: function(val) {
+        return 15;
+      },
+      showEffectOn: 'render',
+      itemStyle: {
+        normal: {
+          color: '#2ec1ae'
+        }
+      },
+      data: pointData
+    }]
+  };
+</script>
+</body>
+</html>

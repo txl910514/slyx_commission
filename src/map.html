@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="jslib/echarts.js"></script>
+    <script type="text/javascript" src="jslib/bmap.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=UCVb3rkl12kd2UGTu7gSvqlp"></script>
+    <style>
+        #map {
+            position: absolute;
+            top:0;
+            right:0;
+            left: 0;
+            bottom: 0;
+            background: #000;
+        }
+        .anchorBL {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<div id="map">
+
+</div>
+<script type="text/javascript">
+    var pointData = [
+      {
+        "name": "上海市第二康复医院",
+        "value": [121.4811944, 31.34563889]
+      },
+      {
+        "name": "市一宝山分院",
+        "value": [121.4913722, 31.37926389]
+      },
+      {
+        "name": "上海市宝山区罗店医院",
+        "value": [121.3438833, 31.4143]
+      },
+      {
+        "name": "宝山区友谊街道社区卫生服务中心",
+        "value": [121.4911139,31.40340278]
+      },
+      {
+        "name": "上海市宝山区精神卫生中心",
+        "value": [121.4813639,31.41145278]
+      },
+      {
+        "name": "宝山区淞南镇社区卫生服务中心",
+        "value": [121.48865618,31.34204967]
+      },
+      {
+        "name": "月浦镇社区卫生服务中心",
+        "value": [121.4312276,31.41647202]
+      },
+      {
+        "name": "月浦镇盛桥社区卫生服务中心",
+        "value": [121.4038396,31.45208572]
+      },
+      {
+        "name": "杨行镇社区卫生服务中心",
+        "value": [121.4444194,31.37131629]
+      },
+      {
+        "name": "吴淞街道社区卫生服务中心",
+        "value": [121.4878527, 31.38312975]
+      },
+      {
+        "name": "庙行镇社区卫生服务中心",
+        "value": [121.4287758, 31.32650549]
+      },
+      {
+        "name": "泗塘社区卫生服务中心",
+        "value": [121.458224, 31.33667294]
+      },
+      {
+        "name": "张庙街道长江路社区卫生服务中心",
+        "value": [121.4447286, 31.3401958]
+      },
+      {
+        "name": "高境镇社区卫生服务中心",
+        "value": [121.4628418, 31.32381919]
+      },
+      {
+        "name": "大场镇祁连社区卫生服务中心",
+        "value": [121.3772412, 31.32285746]
+      },
+      {
+        "name": "大场镇大场社区卫生服务中心",
+        "value": [121.4172288, 31.28762572]
+      },
+      {
+        "name": "大场镇第三社区卫生服务中心",
+        "value": [121.4189524, 31.29979356]
+      },
+      {
+        "name": "顾村镇菊泉新城社区卫生服务中心",
+        "value": [121.3717538, 31.35238743]
+      },
+      {
+        "name": "顾村镇社区卫生服务中心",
+        "value": [121.4089151, 31.35288384]
+      },
+      {
+        "name": "罗店镇社区卫生服务中心",
+        "value": [121.3582939, 31.40416825]
+      },
+      {
+        "name": "罗泾镇社区卫生服务中心",
+        "value": [121.3714251, 31.46136213]
+      },
+      {
+        "name": "上海市宝山区仁和医院",
+        "value": [121.4429209, 31.33182076]
+      },
+      {
+        "name": "曙光医院宝山分院",
+        "value": [121.4864889, 31.40972133]
+      },
+      {
+        "name": "上海宝山区妇幼保健所",
+        "value": [121.49151175, 31.38374353]
+      },
+      {
+        "name": "宝山区老年护理医院",
+        "value": [121.44284289, 31.32934076]
+      },
+      {
+        "name": "上海市宝山区大场医院",
+        "value": [121.39305039, 31.30701039]
+      }
+    ]
+  var myChart = echarts.init(document.getElementById('map'));
+  var option = {
+    bmap: {
+      center: [121.48, 31.39],
+      zoom:13,
+      roam: false,
+      mapStyle: {
+        styleJson: [
+          {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": {
+              "color": "#044161"
+            }
+          },
+          {
+            "featureType": "land",
+            "elementType": "all",
+            "stylers": {
+              "color": "#004981"
+            }
+          },
+          {
+            "featureType": "boundary",
+            "elementType": "geometry",
+            "stylers": {
+              "color": "#064f85"
+            }
+          },
+          {
+            "featureType": "railway",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "geometry",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#005b96",
+              "lightness": 1
+            }
+          },
+          {
+            "featureType": "highway",
+            "elementType": "labels",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "arterial",
+            "elementType": "geometry",
+            "stylers": {
+              "color": "#004981"
+            }
+          },
+          {
+            "featureType": "arterial",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#00508b"
+            }
+          },
+          {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "green",
+            "elementType": "all",
+            "stylers": {
+              "color": "#056197",
+              "visibility": "off"
+            }
+          },
+          {
+            "featureType": "subway",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "manmade",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "local",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "arterial",
+            "elementType": "labels",
+            "stylers": {
+              "visibility": "off"
+            }
+          }, {
+            "featureType": "boundary",
+            "elementType": "geometry.fill",
+            "stylers": {
+              "color": "#029fd4"
+            }
+          }, {
+            "featureType": "building",
+            "elementType": "all",
+            "stylers": {
+              "color": "#1a5787"
+            }
+          }, {
+            "featureType": "label",
+            "elementType": "all",
+            "stylers": {
+              "visibility": "off"
+            }
+          }
+        ]
+      }
+    },
+    geo: {
+      map: 'bmap'
+    },
+    series: [{
+      name: 'marker',
+      type: 'effectScatter',
+      coordinateSystem: 'bmap',
+      zlevel: 2,
+      rippleEffect: {
+        brushType: 'stroke'
+      },
+      label: {
+        normal: {
+          show: true,
+          position: 'bottom',
+          formatter: '{b}'
+        }
+      },
+      symbolSize: function(val) {
+        return 15;
+      },
+      showEffectOn: 'render',
+      itemStyle: {
+        normal: {
+          color: '#2ec1ae'
+        }
+      },
+      data: pointData
+    }]
+  };
+  myChart.setOption(option);
+  var setView = pointData.map(function (value) {
+    return new BMap.Point(value.value[0], value.value[1])
+  })
+  var bmap = myChart.getModel().getComponent('bmap').getBMap()
+    // bmap.centerAndZoom('上海市宝山区')
+    // bmap.setViewport(setView)
+    console.log(setView)
+    function getBoundary(){
+      var bdary = new BMap.Boundary();
+      bdary.get("上海市宝山区", function(rs){//获取行政区域
+        console.log(rs)
+        // bmap.clearOverlays();        //清除地图覆盖物
+        var count = rs.boundaries.length; //行政区域的点有多少个
+        if (count === 0) {
+          alert('未能获取当前输入行政区域');
+          return
+        }
+        var pointArray = [];
+        for (var i = 0; i < count; i++) {
+          var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 5, strokeColor: "#0f689c", fillColor: 'rgba(0,0,0,0)'}); //建立多边形覆盖物
+          bmap.addOverlay(ply);  //添加覆盖物
+          pointArray = pointArray.concat(ply.getPath());
+        }
+        // bmap.setViewport(pointArray);    //调整视野
+      });
+    }
+    getBoundary();
+</script>
+</body>
+</html>
