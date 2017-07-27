@@ -1,28 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script type="text/javascript" src="jslib/jquery.min.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=UCVb3rkl12kd2UGTu7gSvqlp"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js"></script>
-    <style>
-        #map_box {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: #000;
+
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #container {
+            height: 100%;
         }
         .anchorBL {
             display: none;
         }
     </style>
 </head>
+
 <body>
-<div id="map_box"></div>
-<script>
+<div id="container"></div>
+
+
+
+<script type='text/javascript'>
+  //提示：下面的代码用jquery，所以如果有不能运行的情况请引用后尝试
+  //百度地图api container对应前端div名称 前端要引用2.0版本的百度地图api
+  //需引用api.map.baidu.com/library/AreaRestriction/1.2/src/AreaRestriction_min.js
   const styleJson = [
     {
       "featureType": "water",
@@ -147,60 +162,24 @@
       }
     }
   ]
-  var map = new BMap.Map('map_box')
-    map.setMapStyle({styleJson:styleJson});
-  map.centerAndZoom(new BMap.Point(110.48865618, 35.34204967), 1);
+  var map = new BMap.Map("container", { enableMapClick: false }); // 创建地图实例，禁止点击地图底图
+  //设置样式
+  // map.setMapStyle({styleJson:styleJson});
+  map.centerAndZoom(new BMap.Point(110.48865618, 35.34204967), 8);
   map.disableDragging();//禁止拖动
   map.disableDoubleClickZoom();//禁止双击缩放
-  var startLng = 0
-  var endLng = 180
-  var startLat = 0
-  var endLat = 90
-  var rectangle = [
-    new BMap.Point(startLng, startLat),
-    new BMap.Point(startLng, endLat),
-    new BMap.Point(endLng, endLat),
-    new BMap.Point(endLng, startLat),
-    new BMap.Point(startLng, startLat)
-  ]
-//  var ply = new BMap.Polygon(rectangle, {strokeWeight: 5, strokeColor: "#0f689c", fillColor: 'rgba(0,0,0,0.3)'}); //建立多边形覆盖物
-//  map.addOverlay(ply);
   var blist = [];
   var districtLoading = 0;
+
   function getBoundary() {
-    addDistrict("四川");
-    addDistrict("重庆");
-    addDistrict("贵州");
-    addDistrict("西藏");
-    addDistrict("云南");
-    addDistrict("陕西");
-    addDistrict("甘肃");
-    addDistrict("宁夏");
-    addDistrict("新疆");
-    addDistrict("青海");
-    addDistrict("湖北");
-    addDistrict("湖南");
-    addDistrict("福建");
-    addDistrict("江西");
-    addDistrict("广西");
-    addDistrict("广东");
-    addDistrict("海南");
-    addDistrict("台湾");
-    addDistrict("上海");
-    addDistrict("江苏");
-    addDistrict("浙江");
-    addDistrict("安徽");
-    addDistrict("山东");
-    addDistrict("河南");
-    addDistrict("北京");
-    addDistrict("天津");
-    addDistrict("河北");
-    addDistrict("内蒙古");
-    addDistrict("山西");
-    addDistrict("黑龙江");
-    addDistrict("吉林省");
-    addDistrict("辽宁");
+    addDistrict(" 成都市");
   }
+
+  /**
+   * 添加行政区划
+   * @param {} districtName 行政区划名
+   * @returns  无返回值
+   */
   function addDistrict(districtName) {
     //使用计数器来控制加载过程
     districtLoading++;
@@ -222,45 +201,88 @@
       }
     });
   }
+
+
+  /**
+   * 各种鼠标事件绑定
+   */
+  function click(evt) {
+    alert(evt.target.name);
+  }
+
+  function mouseover(evt) {
+    evt.target.label.setZIndex(99);
+    evt.target.label.setPosition(evt.point);
+    evt.target.label.show();
+  }
+
+  function mousemove(evt) {
+    evt.target.label.setPosition(evt.point);
+  }
+
+  function mouseout(evt) {
+    evt.target.label.hide();
+  }
+
   function drawBoundary() {
     //包含所有区域的点数组
     var pointArray = [];
+
+      /*画遮蔽层的相关方法
+       *思路: 首先在中国地图最外画一圈，圈住理论上所有的中国领土，然后再将每个闭合区域合并进来，并全部连到西北角。
+       *      这样就做出了一个经过多次西北角的闭合多边形*/
+    //定义中国东南西北端点，作为第一层
+    var pNW = { lat: 59.0, lng: 73.0 }
+    var pNE = { lat: 59.0, lng: 136.0 }
+    var pSE = { lat: 3.0, lng: 136.0 }
+    var pSW = { lat: 3.0, lng: 73.0 }
+    //向数组中添加一次闭合多边形，并将西北角再加一次作为之后画闭合区域的起点
     var pArray = [];
-    pArray = [
-      new BMap.Point(endLng - 1, endLat - 1),
-      new BMap.Point(endLng, startLat),
-      new BMap.Point(startLng, startLat),
-      new BMap.Point(startLng, endLat),
-      new BMap.Point(endLng, endLat),
-    ]
+    pArray.push(pNW);
+    pArray.push(pSW);
+    pArray.push(pSE);
+    pArray.push(pNE);
+    pArray.push(pNW);
     //循环添加各闭合区域
     for (var i = 0; i < blist.length; i++) {
       //添加显示用标签层
+      var label = new BMap.Label(blist[i].name, { offset: new BMap.Size(20, -10) });
+      label.hide();
+      map.addOverlay(label);
 
       //添加多边形层并显示
-      var ply = new BMap.Polygon(blist[i].points, { strokeWeight: 0.0000001, strokeColor: "red", fillColor: "rgba(0,0,0,0)" }); //建立多边形覆盖物
+      var ply = new BMap.Polygon(blist[i].points, { strokeWeight: 5, strokeColor: "#056197", fillColor: "rgba(0,0,0,0)" }); //建立多边形覆盖物
+      ply.name = blist[i].name;
+      ply.label = label;
+      ply.addEventListener("click", click);
+      ply.addEventListener("mouseover", mouseover);
+      ply.addEventListener("mouseout", mouseout);
+      ply.addEventListener("mousemove", mousemove);
       map.addOverlay(ply);
 
+      //添加名称标签层
+      var centerlabel = new BMap.Label(blist[i].name, { offset: new BMap.Size(0, 0) });
+      centerlabel.setPosition(ply.getBounds().getCenter());
+      map.addOverlay(centerlabel);
 
       //将点增加到视野范围内
       var path = ply.getPath();
       pointArray = pointArray.concat(path);
       //将闭合区域加到遮蔽层上，每次添加完后要再加一次西北角作为下次添加的起点和最后一次的终点
       pArray = pArray.concat(path);
-      console.log(pArray[0])
-      pArray[0].lng = 180
-      pArray[0].lat = 90
       pArray.push(pArray[0]);
     }
+
     //限定显示区域，需要引用api库
-    var boundply = new BMap.Polygon(pointArray);
-    BMapLib.AreaRestriction.setBounds(map, boundply.getBounds());
+//    var boundply = new BMap.Polygon(pointArray);
+//    BMapLib.AreaRestriction.setBounds(map, boundply.getBounds());
     map.setViewport(pointArray);    //调整视野
 
     //添加遮蔽层
-    var plyArea = new BMap.Polygon(pArray, { strokeOpacity: 0, strokeColor: "rgba(0,0,0,0)", strokeWeight: 0.0000001, fillColor: "#000000", fillOpacity: 0.2}); //建立多边形覆盖物
-    map.addOverlay(plyArea);
+    var plyall = new BMap.Polygon(pArray, { strokeOpacity: 1, strokeColor: "#000000", strokeWeight: 0.00001, fillColor: "#000000", fillOpacity: 0.2 }); //建立多边形覆盖物
+    map.addOverlay(plyall);
   }
+
   setTimeout(function () {
     getBoundary();
   }, 100);
