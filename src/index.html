@@ -250,6 +250,7 @@
       console.log(pArray[0])
       pArray[0].lng = 180
       pArray[0].lat = 90
+      pArray.push(path[0])
       pArray.push(pArray[0]);
     }
     //限定显示区域，需要引用api库
@@ -258,7 +259,7 @@
     map.setViewport(pointArray);    //调整视野
 
     //添加遮蔽层
-    var plyArea = new BMap.Polygon(pArray, { strokeOpacity: 0, strokeColor: "rgba(0,0,0,0)", strokeWeight: 0.0000001, fillColor: "#000000", fillOpacity: 0.2}); //建立多边形覆盖物
+    var plyArea = new BMap.Polygon(pArray, { strokeOpacity: 0, strokeColor: "#000", strokeWeight: 0.0000001, fillColor: "#000", fillOpacity: 0}); //建立多边形覆盖物
     map.addOverlay(plyArea);
   }
   setTimeout(function () {
